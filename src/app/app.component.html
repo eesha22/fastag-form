@@ -1,0 +1,290 @@
+<div class="app-container">
+  <header class="header">
+    <h1>FASTag Application Form</h1>
+    <p class="subtitle">Complete the form below. Fields marked with * are required.</p>
+  </header>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-wrapper" novalidate>
+    <section class="card">
+      <h2>1. Application Type</h2>
+      <div class="row">
+        <div class="field">
+          <label>Form Type *</label>
+          <select formControlName="formType">
+            <option *ngFor="let t of formTypes" [value]="t">{{ t }}</option>
+          </select>
+          <div class="error" *ngIf="showError(f['formType'])">Form Type is required</div>
+        </div>
+        <div class="field">
+          <label>Customer Category *</label>
+          <select formControlName="customerCategory">
+            <option *ngFor="let c of customerCategories" [value]="c">{{ c }}</option>
+          </select>
+          <div class="error" *ngIf="showError(f['customerCategory'])">Customer Category is required</div>
+        </div>
+        <div class="field" *ngIf="isCorporate">
+          <label>Entity Type *</label>
+          <select formControlName="entityType">
+            <option [ngValue]="null">-- Select Entity Type --</option>
+            <option *ngFor="let e of entityTypes" [value]="e">{{ e }}</option>
+          </select>
+          <div class="error" *ngIf="showError(f['entityType'])">Entity Type is required for Corporate</div>
+        </div>
+      </div>
+    </section>
+    <section class="card" formGroupName="authentication">
+      <h2>2. Authentication</h2>
+      <div class="row">
+        <div class="field">
+          <label>Mobile Number *</label>
+          <input type="tel" formControlName="mobile" maxlength="10" placeholder="10-digit Indian mobile" />
+          <div class="error" *ngIf="showError(auth['mobile'])">
+            <span *ngIf="auth['mobile'].hasError('required')">Mobile is required</span>
+            <span *ngIf="auth['mobile'].hasError('indianMobile')">Must be a valid 10-digit Indian mobile (starts with 6-9)</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>OTP *</label>
+          <input type="text" formControlName="otp" maxlength="6" placeholder="6-digit OTP" />
+          <div class="error" *ngIf="showError(auth['otp'])">
+            <span *ngIf="auth['otp'].hasError('required')">OTP is required</span>
+            <span *ngIf="auth['otp'].hasError('otp')">Must be exactly 6 digits</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="card" *ngIf="isIndividual" formGroupName="individual">
+      <h2>3. Individual Details</h2>
+      <div class="row">
+        <div class="field full">
+          <label>Full Name *</label>
+          <input type="text" formControlName="fullName" placeholder="As per Aadhaar" />
+          <div class="error" *ngIf="showError(individual['fullName'])">
+            <span *ngIf="individual['fullName'].hasError('required')">Full Name is required</span>
+            <span *ngIf="individual['fullName'].hasError('minlength')">Minimum 3 characters</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Date of Birth *</label>
+          <input type="date" formControlName="dateOfBirth" />
+          <div class="error" *ngIf="showError(individual['dateOfBirth'])">
+            <span *ngIf="individual['dateOfBirth'].hasError('required')">DOB is required</span>
+            <span *ngIf="individual['dateOfBirth'].hasError('minAge')">Age must be 18 or above</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Email *</label>
+          <input type="email" formControlName="email" placeholder="you@example.com" />
+          <div class="error" *ngIf="showError(individual['email'])">
+            <span *ngIf="individual['email'].hasError('required')">Email is required</span>
+            <span *ngIf="individual['email'].hasError('email')">Invalid email format</span>
+          </div>
+        </div>
+      </div>
+      <div class="sub-section" formGroupName="address">
+        <h3>Address</h3>
+        <div class="row">
+          <div class="field full"><label>Address Line 1 *</label><input type="text" formControlName="line1" />
+            <div class="error" *ngIf="showError(individualAddress['line1'])">Line 1 is required</div></div>
+        </div>
+        <div class="row">
+          <div class="field full"><label>Address Line 2</label><input type="text" formControlName="line2" /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>City *</label><input type="text" formControlName="city" />
+            <div class="error" *ngIf="showError(individualAddress['city'])">City is required</div></div>
+          <div class="field"><label>State *</label>
+            <select formControlName="state"><option value="">-- Select State --</option>
+              <option *ngFor="let s of indianStates" [value]="s">{{ s }}</option></select>
+            <div class="error" *ngIf="showError(individualAddress['state'])">State is required</div></div>
+          <div class="field"><label>Pincode *</label><input type="text" formControlName="pincode" maxlength="6" />
+            <div class="error" *ngIf="showError(individualAddress['pincode'])">Must be 6 digits</div></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Aadhaar Number *</label>
+          <input type="text" formControlName="aadhaarNumber" maxlength="12" />
+          <div class="error" *ngIf="showError(individual['aadhaarNumber'])">12 digits required</div></div>
+        <div class="field"><label>PAN Number *</label>
+          <input type="text" formControlName="panNumber" maxlength="10" style="text-transform:uppercase" />
+          <div class="error" *ngIf="showError(individual['panNumber'])">Invalid PAN</div></div>
+      </div>
+      <div class="file-grid">
+        <div class="field file-field"><label>Aadhaar Front *</label>
+          <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'individual.aadhaarFront')" />
+          <span class="file-name" *ngIf="getFileName(individual['aadhaarFront'])">{{ getFileName(individual['aadhaarFront']) }}</span>
+          <div class="error" *ngIf="showError(individual['aadhaarFront'])">Required</div></div>
+        <div class="field file-field"><label>Aadhaar Back *</label>
+          <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'individual.aadhaarBack')" />
+          <span class="file-name" *ngIf="getFileName(individual['aadhaarBack'])">{{ getFileName(individual['aadhaarBack']) }}</span>
+          <div class="error" *ngIf="showError(individual['aadhaarBack'])">Required</div></div>
+        <div class="field file-field"><label>PAN Front *</label>
+          <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'individual.panFront')" />
+          <span class="file-name" *ngIf="getFileName(individual['panFront'])">{{ getFileName(individual['panFront']) }}</span>
+          <div class="error" *ngIf="showError(individual['panFront'])">Required</div></div>
+        <div class="field file-field"><label>PAN Back (optional)</label>
+          <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'individual.panBack')" />
+          <span class="file-name" *ngIf="getFileName(individual['panBack'])">{{ getFileName(individual['panBack']) }}</span></div>
+        <div class="field file-field"><label>Owner Photo *</label>
+          <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'individual.ownerPhoto')" />
+          <span class="file-name" *ngIf="getFileName(individual['ownerPhoto'])">{{ getFileName(individual['ownerPhoto']) }}</span>
+          <div class="error" *ngIf="showError(individual['ownerPhoto'])">Required (max 2MB)</div></div>
+      </div>
+    </section>
+    <section class="card" *ngIf="isCorporate" formGroupName="corporate">
+      <h2>3. Corporate Details</h2>
+      <div class="row">
+        <div class="field full"><label>Company Name *</label>
+          <input type="text" formControlName="companyName" />
+          <div class="error" *ngIf="showError(corporate['companyName'])">Required</div></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Company PAN *</label>
+          <input type="text" formControlName="companyPan" maxlength="10" style="text-transform:uppercase" />
+          <div class="error" *ngIf="showError(corporate['companyPan'])">Invalid PAN</div></div>
+        <div class="field"><label>GSTIN (optional)</label>
+          <input type="text" formControlName="gstin" style="text-transform:uppercase" />
+          <div class="error" *ngIf="showError(corporate['gstin']) && corporate['gstin'].hasError('gstin')">Invalid GSTIN</div></div>
+      </div>
+      <div class="sub-section" formGroupName="registeredAddress">
+        <h3>Registered Address</h3>
+        <div class="row"><div class="field full"><label>Address Line 1 *</label><input type="text" formControlName="line1" />
+          <div class="error" *ngIf="showError(corporateAddress['line1'])">Required</div></div></div>
+        <div class="row"><div class="field full"><label>Address Line 2</label><input type="text" formControlName="line2" /></div></div>
+        <div class="row">
+          <div class="field"><label>City *</label><input type="text" formControlName="city" /><div class="error" *ngIf="showError(corporateAddress['city'])">Required</div></div>
+          <div class="field"><label>State *</label>
+            <select formControlName="state"><option value="">-- Select --</option>
+              <option *ngFor="let s of indianStates" [value]="s">{{ s }}</option></select>
+            <div class="error" *ngIf="showError(corporateAddress['state'])">Required</div></div>
+          <div class="field"><label>Pincode *</label><input type="text" formControlName="pincode" maxlength="6" />
+            <div class="error" *ngIf="showError(corporateAddress['pincode'])">6 digits</div></div>
+        </div>
+      </div>
+      <div class="sub-section" formGroupName="authorizedSignatory">
+        <h3>Authorized Signatory</h3>
+        <div class="row">
+          <div class="field"><label>Name *</label><input type="text" formControlName="name" /><div class="error" *ngIf="showError(signatory['name'])">Required</div></div>
+          <div class="field"><label>Mobile *</label><input type="tel" formControlName="mobile" maxlength="10" /><div class="error" *ngIf="showError(signatory['mobile'])">Valid mobile</div></div>
+          <div class="field"><label>Email *</label><input type="email" formControlName="email" /><div class="error" *ngIf="showError(signatory['email'])">Valid email</div></div>
+        </div>
+        <div class="file-grid">
+          <div class="field file-field"><label>Aadhaar Front *</label>
+            <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'corporate.authorizedSignatory.aadhaarFront')" />
+            <span class="file-name" *ngIf="getFileName(signatory['aadhaarFront'])">{{ getFileName(signatory['aadhaarFront']) }}</span>
+            <div class="error" *ngIf="showError(signatory['aadhaarFront'])">Required</div></div>
+          <div class="field file-field"><label>Aadhaar Back *</label>
+            <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'corporate.authorizedSignatory.aadhaarBack')" />
+            <span class="file-name" *ngIf="getFileName(signatory['aadhaarBack'])">{{ getFileName(signatory['aadhaarBack']) }}</span>
+            <div class="error" *ngIf="showError(signatory['aadhaarBack'])">Required</div></div>
+          <div class="field file-field"><label>PAN Front *</label>
+            <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'corporate.authorizedSignatory.panFront')" />
+            <span class="file-name" *ngIf="getFileName(signatory['panFront'])">{{ getFileName(signatory['panFront']) }}</span>
+            <div class="error" *ngIf="showError(signatory['panFront'])">Required</div></div>
+          <div class="field file-field"><label>PAN Back (optional)</label>
+            <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'corporate.authorizedSignatory.panBack')" />
+            <span class="file-name" *ngIf="getFileName(signatory['panBack'])">{{ getFileName(signatory['panBack']) }}</span></div>
+          <div class="field file-field"><label>Photo *</label>
+            <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'corporate.authorizedSignatory.photo')" />
+            <span class="file-name" *ngIf="getFileName(signatory['photo'])">{{ getFileName(signatory['photo']) }}</span>
+            <div class="error" *ngIf="showError(signatory['photo'])">Required</div></div>
+        </div>
+      </div>
+      <div class="sub-section" formGroupName="documents" *ngIf="documentLabels">
+        <h3>Documents (based on Entity Type)</h3>
+        <div class="doc-block">
+          <label>Entity ID * <small>({{ documentLabels.entityId.join(', ') }})</small></label>
+          <input type="file" multiple accept="image/jpeg,image/png,application/pdf" (change)="onMultiFileChange($event, entityIdFiles)" />
+          <ul class="file-list"><li *ngFor="let ctrl of entityIdFiles.controls; let i = index">{{ ctrl.value?.name }}
+            <button type="button" class="btn-remove" (click)="removeFile(entityIdFiles, i)">x</button></li></ul>
+          <div class="error" *ngIf="showError(entityIdFiles)">At least 1 file</div>
+        </div>
+        <div class="doc-block">
+          <label>Address Proof * <small>({{ documentLabels.addressProof.join(', ') }})</small></label>
+          <input type="file" multiple accept="image/jpeg,image/png,application/pdf" (change)="onMultiFileChange($event, addressProofFiles)" />
+          <ul class="file-list"><li *ngFor="let ctrl of addressProofFiles.controls; let i = index">{{ ctrl.value?.name }}
+            <button type="button" class="btn-remove" (click)="removeFile(addressProofFiles, i)">x</button></li></ul>
+          <div class="error" *ngIf="showError(addressProofFiles)">At least 1 file</div>
+        </div>
+        <div class="doc-block">
+          <label>Mandatory * <small>({{ documentLabels.mandatory.join(', ') }})</small></label>
+          <input type="file" multiple accept="image/jpeg,image/png,application/pdf" (change)="onMultiFileChange($event, mandatoryFiles)" />
+          <ul class="file-list"><li *ngFor="let ctrl of mandatoryFiles.controls; let i = index">{{ ctrl.value?.name }}
+            <button type="button" class="btn-remove" (click)="removeFile(mandatoryFiles, i)">x</button></li></ul>
+          <div class="error" *ngIf="showError(mandatoryFiles)">At least 1 file</div>
+        </div>
+      </div>
+    </section>
+    <section class="card" formGroupName="vehicle">
+      <h2>4. Vehicle Details</h2>
+      <div class="row">
+        <div class="field"><label>Vehicle Type *</label>
+          <select formControlName="vehicleType"><option *ngFor="let v of vehicleTypes" [value]="v">{{ v }}</option></select></div>
+        <div class="field"><label>Registration Number *</label>
+          <input type="text" formControlName="registrationNumber" placeholder="MH12AB1234" style="text-transform:uppercase" />
+          <div class="error" *ngIf="showError(vehicle['registrationNumber'])">Invalid format</div></div>
+        <div class="field"><label>Chassis Number *</label>
+          <input type="text" formControlName="chassisNumber" maxlength="17" style="text-transform:uppercase" />
+          <div class="error" *ngIf="showError(vehicle['chassisNumber'])">8-17 alphanumeric</div></div>
+      </div>
+      <div class="file-grid">
+        <div class="field file-field"><label>RC Front *</label>
+          <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'vehicle.rcFront')" />
+          <span class="file-name" *ngIf="getFileName(vehicle['rcFront'])">{{ getFileName(vehicle['rcFront']) }}</span>
+          <div class="error" *ngIf="showError(vehicle['rcFront'])">Required</div></div>
+        <div class="field file-field"><label>RC Back *</label>
+          <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'vehicle.rcBack')" />
+          <span class="file-name" *ngIf="getFileName(vehicle['rcBack'])">{{ getFileName(vehicle['rcBack']) }}</span>
+          <div class="error" *ngIf="showError(vehicle['rcBack'])">Required</div></div>
+        <div class="field file-field"><label>Front Image * <small>(plate + windshield)</small></label>
+          <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'vehicle.frontImage')" />
+          <span class="file-name" *ngIf="getFileName(vehicle['frontImage'])">{{ getFileName(vehicle['frontImage']) }}</span>
+          <div class="error" *ngIf="showError(vehicle['frontImage'])">Required</div></div>
+        <div class="field file-field"><label>Side Image * <small>(axles + FASTag)</small></label>
+          <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'vehicle.sideImage')" />
+          <span class="file-name" *ngIf="getFileName(vehicle['sideImage'])">{{ getFileName(vehicle['sideImage']) }}</span>
+          <div class="error" *ngIf="showError(vehicle['sideImage'])">Required</div></div>
+        <div class="field file-field"><label>Tag Closeup *</label>
+          <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'vehicle.tagCloseup')" />
+          <span class="file-name" *ngIf="getFileName(vehicle['tagCloseup'])">{{ getFileName(vehicle['tagCloseup']) }}</span>
+          <div class="error" *ngIf="showError(vehicle['tagCloseup'])">Required</div></div>
+      </div>
+    </section>
+    <section class="card" formGroupName="product">
+      <h2>5. Product Selection</h2>
+      <div class="row">
+        <div class="field"><label>Bank *</label>
+          <select formControlName="bank"><option *ngFor="let b of banks" [value]="b">{{ b }}</option></select></div>
+        <div class="field"><label>Plan *</label>
+          <select formControlName="plan"><option *ngFor="let p of plans" [value]="p">{{ p }}</option></select></div>
+      </div>
+    </section>
+    <section class="card" *ngIf="isReplace" formGroupName="replacement">
+      <h2>6. Replacement Details</h2>
+      <div class="row">
+        <div class="field"><label>Reason *</label>
+          <select formControlName="reason"><option [ngValue]="null">-- Select --</option>
+            <option *ngFor="let r of replacementReasons" [value]="r">{{ r }}</option></select>
+          <div class="error" *ngIf="showError(replacement['reason'])">Required</div></div>
+        <div class="field"><label>Old Tag ID (optional)</label><input type="text" formControlName="oldTagId" /></div>
+      </div>
+    </section>
+    <section class="card" formGroupName="declarations">
+      <h2>7. Declarations</h2>
+      <div class="checkbox-field">
+        <label><input type="checkbox" formControlName="ovotAccepted" /> I accept the OVOT terms and conditions *</label>
+        <div class="error" *ngIf="showError(declarations['ovotAccepted'])">You must accept OVOT terms</div>
+      </div>
+      <div class="checkbox-field">
+        <label><input type="checkbox" formControlName="vahanVerified" /> I confirm vehicle details verified on Vahan *</label>
+        <div class="error" *ngIf="showError(declarations['vahanVerified'])">Vahan confirmation required</div>
+      </div>
+    </section>
+    <div class="actions">
+      <button type="submit" class="btn-primary">Submit Application</button>
+      <button type="button" class="btn-secondary" (click)="form.reset(); submitted=false">Reset</button>
+    </div>
+    <div class="form-status" *ngIf="submitted && form.invalid">Please fix the highlighted errors before submitting.</div>
+  </form>
+</div>
