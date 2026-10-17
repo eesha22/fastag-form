@@ -22,7 +22,7 @@ export class FormService {
   createForm(): FormGroup {
     return this.fb.group({
       formType: ['APPLY', Validators.required],
-      customerCategory: ['INDIVIDUAL', Validators.required],
+      customerCategory: ['CORPORATE', Validators.required],
       entityType: [null], // required only when CORPORATE
 
       authentication: this.fb.group({
@@ -46,8 +46,7 @@ export class FormService {
         rcFront: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
         rcBack: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
         frontImage: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png'])]],
-        sideImage: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png'])]],
-        tagCloseup: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png'])]]
+        sideImage: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png'])]]
       }),
 
       product: this.fb.group({
@@ -78,8 +77,7 @@ export class FormService {
       aadhaarBack: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
       panNumber: ['', [Validators.required, CustomValidators.pan()]],
       panFront: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
-      panBack: [null, [CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
-      ownerPhoto: [null, [Validators.required, CustomValidators.maxFileSize(2), CustomValidators.fileType(['image/jpeg', 'image/png'])]]
+      panBack: [null, [CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]]
     });
   }
 
@@ -96,8 +94,7 @@ export class FormService {
         aadhaarFront: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
         aadhaarBack: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
         panFront: [null, [Validators.required, CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
-        panBack: [null, [CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]],
-        photo: [null, [Validators.required, CustomValidators.maxFileSize(2), CustomValidators.fileType(['image/jpeg', 'image/png'])]]
+        panBack: [null, [CustomValidators.maxFileSize(5), CustomValidators.fileType(['image/jpeg', 'image/png', 'application/pdf'])]]
       }),
       documents: this.fb.group({
         entityId: this.fb.array([], [CustomValidators.minFiles(1)]),

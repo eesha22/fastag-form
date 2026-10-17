@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // Enums for template
   formTypes: FormType[] = ['APPLY', 'KYC', 'REPLACE'];
-  customerCategories: CustomerCategory[] = ['INDIVIDUAL', 'CORPORATE'];
+  customerCategories: CustomerCategory[] = ['CORPORATE'];
   entityTypes: EntityType[] = ['PRIVATE_LIMITED', 'PARTNERSHIP', 'LLP', 'PROPRIETORSHIP', 'HUF'];
   vehicleTypes: VehicleType[] = ['PRIVATE', 'COMMERCIAL'];
   banks: Bank[] = ['IDFC', 'SBI'];

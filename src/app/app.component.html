@@ -126,10 +126,6 @@
         <div class="field file-field"><label>PAN Back (optional)</label>
           <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'individual.panBack')" />
           <span class="file-name" *ngIf="getFileName(individual['panBack'])">{{ getFileName(individual['panBack']) }}</span></div>
-        <div class="field file-field"><label>Owner Photo *</label>
-          <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'individual.ownerPhoto')" />
-          <span class="file-name" *ngIf="getFileName(individual['ownerPhoto'])">{{ getFileName(individual['ownerPhoto']) }}</span>
-          <div class="error" *ngIf="showError(individual['ownerPhoto'])">Required (max 2MB)</div></div>
       </div>
     </section>
     <section class="card" *ngIf="isCorporate" formGroupName="corporate">
@@ -185,10 +181,6 @@
           <div class="field file-field"><label>PAN Back (optional)</label>
             <input type="file" accept="image/jpeg,image/png,application/pdf" (change)="onSingleFileChange($event, 'corporate.authorizedSignatory.panBack')" />
             <span class="file-name" *ngIf="getFileName(signatory['panBack'])">{{ getFileName(signatory['panBack']) }}</span></div>
-          <div class="field file-field"><label>Photo *</label>
-            <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'corporate.authorizedSignatory.photo')" />
-            <span class="file-name" *ngIf="getFileName(signatory['photo'])">{{ getFileName(signatory['photo']) }}</span>
-            <div class="error" *ngIf="showError(signatory['photo'])">Required</div></div>
         </div>
       </div>
       <div class="sub-section" formGroupName="documents" *ngIf="documentLabels">
@@ -245,10 +237,6 @@
           <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'vehicle.sideImage')" />
           <span class="file-name" *ngIf="getFileName(vehicle['sideImage'])">{{ getFileName(vehicle['sideImage']) }}</span>
           <div class="error" *ngIf="showError(vehicle['sideImage'])">Required</div></div>
-        <div class="field file-field"><label>Tag Closeup *</label>
-          <input type="file" accept="image/jpeg,image/png" (change)="onSingleFileChange($event, 'vehicle.tagCloseup')" />
-          <span class="file-name" *ngIf="getFileName(vehicle['tagCloseup'])">{{ getFileName(vehicle['tagCloseup']) }}</span>
-          <div class="error" *ngIf="showError(vehicle['tagCloseup'])">Required</div></div>
       </div>
     </section>
     <section class="card" formGroupName="product">

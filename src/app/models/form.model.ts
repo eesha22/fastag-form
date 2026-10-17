@@ -30,7 +30,6 @@ export interface IndividualData {
   panNumber: string;
   panFront: File | null;
   panBack: File | null;
-  ownerPhoto: File | null;
 }
 
 export interface AuthorizedSignatory {
@@ -41,7 +40,6 @@ export interface AuthorizedSignatory {
   aadhaarBack: File | null;
   panFront: File | null;
   panBack: File | null;
-  photo: File | null;
 }
 
 export interface CorporateDocuments {
@@ -67,7 +65,6 @@ export interface VehicleData {
   rcBack: File | null;
   frontImage: File | null;
   sideImage: File | null;
-  tagCloseup: File | null;
 }
 
 export interface ProductData {
